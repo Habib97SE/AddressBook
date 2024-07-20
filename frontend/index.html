@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Address book - Find Addresses Easier</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="./asset/style.css" type="text/css" />
+</head>
+
+<body>
+    <header>
+        <div class="container flex flex-col justify-center items-center">
+            <h1 class="roboto-black">Find Address Easier with Our Address Management</h1>
+            <div class="flex flex-row roboto-thin search-box">
+                <input type="text" placeholder="Search" />
+                <button class="btn btn-primary">Search</button>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div class="container">
+            <p>
+                You can add more addresses to your phone book using the button below:
+                <br />
+                <button class="btn btn-secondary add-new">+ Add New</button>
+            </p>
+            <div class="table-responsive">
+                <table class="roboto-medium">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Address</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>John Doe</td>
+                            <td>123 Main St</td>
+                            <td><a href="mailto:john.doe@gmail.com">john.doe@gmail.com</a></td>
+                            <td><a href="tel:+1234567">+1234567</a></td>
+                            <td>
+                                <button class="btn btn-warning">Edit</button>
+                                <button class="btn btn-danger">Delete</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Jane Smith</td>
+                            <td>456 Elm St</td>
+                            <td><a href="mailto:jane.smith@gmail.com">jane.smith@gmail.com</a></td>
+                            <td><a href="tel:+7654321">+7654321</a></td>
+                            <td>
+                                <button class="btn btn-primary">Edit</button>
+                                <button class="btn btn-danger">Delete</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Sam Wilson</td>
+                            <td>789 Oak St</td>
+                            <td><a href="mailto:sam.wilson@gmail.com">sam.wilson@gmail.com</a></td>
+                            <td><a href="tel:+1122334">+1122334</a></td>
+                            <td>
+                                <button class="btn btn-primary">Edit</button>
+                                <button class="btn btn-danger">Delete</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <p>All rights reserved &copy; 2024</p>
+    </footer>
+</body>
+
+</html>
