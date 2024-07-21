@@ -16,8 +16,10 @@
         <div class="container flex flex-col justify-center items-center">
             <h1 class="roboto-black">Find Address Easier with Our Address Management</h1>
             <div class="flex flex-row roboto-thin search-box">
-                <input type="text" placeholder="Search" />
-                <button class="btn btn-primary">Search</button>
+                <input type="text" placeholder="Search" id="searchQueryInput" />
+                <button class="btn btn-primary flex flex-row justify-center items-center p-2"
+                    id="searchResultsModalBtn"><i class="fas fa-search"></i>
+                    Search</button>
             </div>
         </div>
     </header>
@@ -26,12 +28,14 @@
             <p>
                 You can add more addresses to your phone book using the button below:
                 <br />
-                <button class="btn btn-secondary add-new">+ Add New</button>
+                <button class="btn btn-secondary add-new" id="openAddModalBtn"><i class="fas fa-plus"></i> Add
+                    New</button>
             </p>
             <div class="table-responsive">
-                <table class="roboto-medium">
+                <table class="roboto-medium flex-sm flex-sm-col justify-sm-center">
                     <thead>
                         <tr>
+                            <th>#</th>
                             <th>Name</th>
                             <th>Address</th>
                             <th>Email</th>
@@ -41,33 +45,46 @@
                     </thead>
                     <tbody>
                         <tr>
+                            <td>1</td>
                             <td>John Doe</td>
                             <td>123 Main St</td>
                             <td><a href="mailto:john.doe@gmail.com">john.doe@gmail.com</a></td>
                             <td><a href="tel:+1234567">+1234567</a></td>
-                            <td>
-                                <button class="btn btn-warning">Edit</button>
-                                <button class="btn btn-danger">Delete</button>
+                            <td class="flex-sm flex-sm-row justify-sm-between">
+                                <button class="btn btn-warning openUpdateModalBtn w-full mx-2"><i
+                                        class="fas fa-edit"></i>
+                                    Edit</button>
+                                <button class="btn btn-danger openDeleteModalBtn w-full mx-2" data-row-index="0"><i
+                                        class="fas fa-trash"></i>
+                                    Delete</button>
                             </td>
                         </tr>
                         <tr>
+                            <td>2</td>
                             <td>Jane Smith</td>
                             <td>456 Elm St</td>
                             <td><a href="mailto:jane.smith@gmail.com">jane.smith@gmail.com</a></td>
                             <td><a href="tel:+7654321">+7654321</a></td>
                             <td>
-                                <button class="btn btn-primary">Edit</button>
-                                <button class="btn btn-danger">Delete</button>
+                                <button class="btn btn-warning openUpdateModalBtn"><i class="fas fa-edit"></i>
+                                    Edit</button>
+                                <button class="btn btn-danger openDeleteModalBtn" data-row-index="1"><i
+                                        class="fas fa-trash"></i>
+                                    Delete</button>
                             </td>
                         </tr>
                         <tr>
+                            <td>3</td>
                             <td>Sam Wilson</td>
                             <td>789 Oak St</td>
                             <td><a href="mailto:sam.wilson@gmail.com">sam.wilson@gmail.com</a></td>
                             <td><a href="tel:+1122334">+1122334</a></td>
                             <td>
-                                <button class="btn btn-primary">Edit</button>
-                                <button class="btn btn-danger">Delete</button>
+                                <button class="btn btn-warning openUpdateModalBtn"><i class="fas fa-edit"></i>
+                                    Edit</button>
+                                <button class="btn btn-danger openDeleteModalBtn" data-row-index="2"><i
+                                        class="fas fa-trash"></i>
+                                    Delete</button>
                             </td>
                         </tr>
                     </tbody>
@@ -78,6 +95,252 @@
     <footer>
         <p>All rights reserved &copy; 2024</p>
     </footer>
+
+    <!-- Add Address Modal -->
+    <div class="modal" id="addAddressModal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeAddModalBtn">&times;</span>
+            <h2>Add New Address</h2>
+            <div id="userForm">
+                <form id="newUserForm">
+                    <div class="flex flex-col">
+                        <div class="flex flex-row justify-between items-center">
+                            <div class="w-full p-1">
+                                <label for="addFirstName">First Name</label>
+                                <input type="text" id="addFirstName" name="firstName" required>
+                            </div>
+                            <div class="w-full p-1">
+                                <label for="addLastName">Last Name</label>
+                                <input type="text" id="addLastName" name="lastName" required>
+                            </div>
+                        </div>
+                        <div class="flex flex-row justify-between items-center">
+                            <div class="w-full p-1">
+                                <label for="addPhoneNumber">Phone number: </label>
+                                <input type="text" id="addPhoneNumber" name="phone-number" required>
+                            </div>
+                            <div class="w-full p-1">
+                                <label for="addEmail">E-mail: </label>
+                                <input type="email" id="addEmail" name="email" required>
+                            </div>
+                        </div>
+                        <div>
+                            <input type="submit" class="btn btn-primary" value="Add new person" />
+                        </div>
+                        <div>
+                            <p>
+                                Or choose one from <a href="#" id="showDropdown">the list</a>
+                            </p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div id="userDropdown" class="hidden">
+                <div class="select-container">
+                    <label for="existingUsers">Choose a user:</label>
+                    <select id="existingUsers">
+                        <option value="john-doe">John Doe</option>
+                        <option value="jane-smith">Jane Smith</option>
+                        <option value="sam-wilson">Sam Wilson</option>
+                    </select>
+                </div>
+                <p>
+                    Or <a href="#" id="showForm">create a new one</a>
+                </p>
+            </div>
+            <hr />
+            <form>
+                <label for="addAddress1">Address 1</label>
+                <input type="text" id="addAddress1" name="address1" required>
+                <label for="addAddress2">Address 2</label>
+                <input type="text" id="addAddress2" name="address2">
+                <label for="addZipCode">Zip Code</label>
+                <input type="text" id="addZipCode" name="zipCode" required>
+                <label for="addCity">City</label>
+                <input type="text" id="addCity" name="city" required>
+                <label for="addState">State</label>
+                <input type="text" id="addState" name="state" required>
+                <label for="addCountry">Country</label>
+                <input type="text" id="addCountry" name="country" required>
+                <label for="addAddressType">Address Type</label>
+                <select id="addAddressType" name="addressType" required>
+                    <option value="home">Home</option>
+                    <option value="work">Work</option>
+                    <option value="school">School</option>
+                </select>
+                <button type="submit" class="btn btn-primary my-2">Add Address</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Update Address Modal -->
+    <div class="modal" id="updateAddressModal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeUpdateModalBtn">&times;</span>
+            <h2>Update Address</h2>
+            <div id="updateUserForm">
+                <form id="editUserForm">
+                    <div class="flex flex-col">
+                        <div class="flex flex-row justify-between items-center">
+                            <div class="w-full p-1">
+                                <label for="updateFirstName">First Name</label>
+                                <input type="text" id="updateFirstName" name="firstName" required>
+                            </div>
+                            <div class="w-full p-1">
+                                <label for="updateLastName">Last Name</label>
+                                <input type="text" id="updateLastName" name="lastName" required>
+                            </div>
+                        </div>
+                        <div class="flex flex-row justify-between items-center">
+                            <div class="w-full p-1">
+                                <label for="updatePhoneNumber">Phone number: </label>
+                                <input type="text" id="updatePhoneNumber" name="phone-number" required>
+                            </div>
+                            <div class="w-full p-1">
+                                <label for="updateEmail">E-mail: </label>
+                                <input type="email" id="updateEmail" name="email" required>
+                            </div>
+                        </div>
+                        <div>
+                            <input type="submit" class="btn btn-primary" value="Update person" />
+                        </div>
+                        <div>
+                            <p>
+                                Or choose one from <a href="#" id="showUpdateDropdown">the list</a>
+                            </p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div id="updateUserDropdown" class="hidden">
+                <div class="select-container">
+                    <label for="existingUsersUpdate">Choose a user:</label>
+                    <select id="existingUsersUpdate">
+                        <option value="john-doe">John Doe</option>
+                        <option value="jane-smith">Jane Smith</option>
+                        <option value="sam-wilson">Sam Wilson</option>
+                    </select>
+                </div>
+                <p>
+                    Or <a href="#" id="showUpdateForm">create a new one</a>
+                </p>
+            </div>
+            <hr />
+            <form>
+                <label for="updateAddress1">Address 1</label>
+                <input type="text" id="updateAddress1" name="address1" required>
+                <label for="updateAddress2">Address 2</label>
+                <input type="text" id="updateAddress2" name="address2">
+                <label for="updateZipCode">Zip Code</label>
+                <input type="text" id="updateZipCode" name="zipCode" required>
+                <label for="updateCity">City</label>
+                <input type="text" id="updateCity" name="city" required>
+                <label for="updateState">State</label>
+                <input type="text" id="updateState" name="state" required>
+                <label for="updateCountry">Country</label>
+                <input type="text" id="updateCountry" name="country" required>
+                <label for="updateAddressType">Address Type</label>
+                <select id="updateAddressType" name="addressType" required>
+                    <option value="home">Home</option>
+                    <option value="work">Work</option>
+                    <option value="school">School</option>
+                </select>
+                <button type="submit" class="btn btn-primary">Update Address</button>
+            </form>
+            <div class="alert alert-success">
+                <i class="fas fa-check-circle d-inline"></i>
+                <p class="d-inline">Address updated successfully</p>
+            </div>
+            <div class="alert alert-danger text-center">
+                <p>Failed to update address</p>
+            </div>
+            <div class="alert alert-warning text-center">
+                <p>Address not found</p>
+            </div>
+            <div class="alert alert-info text-center">
+                <p>Address updated successfully</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal" id="deleteConfirmModal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeDeleteModalBtn">&times;</span>
+            <h2>Confirm Deletion</h2>
+            <p>Are you sure you want to delete this address?</p>
+            <div class="flex flex-row">
+                <button class="btn btn-danger m-1 font-lg" id="confirmDeleteBtn">Delete</button>
+                <button class="btn btn-secondary m-1 font-lg" id="cancelDeleteBtn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Results modal -->
+    <div class="modal" id="searchResultsModal">
+        <div class="modal-content w-full">
+            <span class="close-btn" id="closeSearchResultsModalBtn">&times;</span>
+            <h2 class="roboto-thin">Search Results for <span class="roboto-bold " id="showSearchQuery"></span> </h2>
+            <div class="table-responsive">
+                <table class="roboto-medium">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Address</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>John Doe</td>
+                            <td>123 Main St</td>
+                            <td><a href="mailto:john.doe@gmail.com">John.Doe@gmail.com</a></td>
+                            <td><a href="tel:+1234567">+1234567</a></td>
+                            <td>
+                                <button class="btn btn-warning openUpdateModalBtn"><i class="fas fa-edit"></i>
+                                    Edit</button>
+                                <button class="btn btn-danger openDeleteModalBtn" data-row-index="0"><i
+                                        class="fas fa-trash"></i>
+                                    Delete</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Jane Smith</td>
+                            <td>456 Elm St</td>
+                            <td><a href="mailto:jane.smith@gmail.com">Jane.Smith@gmail.com</a></td>
+                            <td><a href="tel:+7654321">+7654321</a></td>
+                            <td>
+                                <button class="btn btn-warning openUpdateModalBtn"><i class="fas fa-edit"></i>
+                                    Edit</button>
+                                <button class="btn btn-danger openDeleteModalBtn" data-row-index="1"><i
+                                        class="fas fa-trash"></i>
+                                    Delete</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Sam Wilson</td>
+                            <td>789 Oak St</td>
+                            <td><a href="mailto:sam.wilson@gmail.com">Sam.Wilson@gmail.com</a></td>
+                            <td><a href="tel:+1122334">+1122334</a></td>
+                            <td>
+                                <button class="btn btn-warning openUpdateModalBtn"><i class="fas fa-edit"></i>
+                                    Edit</button>
+                                <button class="btn btn-danger openDeleteModalBtn" data-row-index="2"><i
+                                        class="fas fa-trash"></i>
+                                    Delete</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <script src="./asset/script.js"></script>
 </body>
 
 </html>
