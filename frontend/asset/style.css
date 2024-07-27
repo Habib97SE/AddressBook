@@ -146,6 +146,18 @@ a:hover {
     display: inline-block;
 }
 
+.capitalize {
+    text-transform: capitalize;
+}
+
+.error {
+    border: 1px solid red;
+}
+
+#addNewUserMesssageBox {
+    min-height: 2vh;
+}
+
 /* BUTTONS Styles */
 .btn {
     padding: 7px 10px;

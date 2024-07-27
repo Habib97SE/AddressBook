@@ -10,11 +10,13 @@ public class AddressRequest {
     private String state;
     private String country;
     private String phoneNumber;
+    private Long userId;
+    private Long addressTypeId;
 
     public AddressRequest() {
     }
 
-    public AddressRequest(String addressOne, String addressTwo, String postalCode, String city, String state, String country, String phoneNumber) {
+    public AddressRequest(String addressOne, String addressTwo, String postalCode, String city, String state, String country, String phoneNumber, Long userId, Long addressTypeId) {
         this.addressOne = addressOne;
         this.addressTwo = addressTwo;
         this.postalCode = postalCode;
@@ -22,6 +24,8 @@ public class AddressRequest {
         this.state = state;
         this.country = country;
         this.phoneNumber = phoneNumber;
+        this.userId = userId;
+        this.addressTypeId = addressTypeId;
     }
 
     public String getAddressOne() {
@@ -80,17 +84,33 @@ public class AddressRequest {
         this.phoneNumber = phoneNumber;
     }
 
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Long getAddressTypeId() {
+        return addressTypeId;
+    }
+
+    public void setAddressTypeId(Long addressTypeId) {
+        this.addressTypeId = addressTypeId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AddressRequest that = (AddressRequest) o;
-        return Objects.equals(addressOne, that.addressOne) && Objects.equals(addressTwo, that.addressTwo) && Objects.equals(postalCode, that.postalCode) && Objects.equals(city, that.city) && Objects.equals(state, that.state) && Objects.equals(country, that.country) && Objects.equals(phoneNumber, that.phoneNumber);
+        return Objects.equals(addressOne, that.addressOne) && Objects.equals(addressTwo, that.addressTwo) && Objects.equals(postalCode, that.postalCode) && Objects.equals(city, that.city) && Objects.equals(state, that.state) && Objects.equals(country, that.country) && Objects.equals(phoneNumber, that.phoneNumber) && Objects.equals(userId, that.userId) && Objects.equals(addressTypeId, that.addressTypeId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(addressOne, addressTwo, postalCode, city, state, country, phoneNumber);
+        return Objects.hash(addressOne, addressTwo, postalCode, city, state, country, phoneNumber, userId, addressTypeId);
     }
 
     @Override
@@ -103,6 +123,8 @@ public class AddressRequest {
                 ", state='" + state + '\'' +
                 ", country='" + country + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
+                ", userId=" + userId +
+                ", addressTypeId=" + addressTypeId +
                 '}';
     }
 }

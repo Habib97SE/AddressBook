@@ -1,5 +1,6 @@
 package org.habibio.tutorial.addressbook.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -11,6 +12,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "users")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -102,6 +104,14 @@ public class User {
 
     public void setMobilePhone(@NotEmpty(message = "The mobile phone number cannot be left empty.") String mobilePhone) {
         this.mobilePhone = mobilePhone.toLowerCase().trim();
+    }
+
+    public List<Address> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(List<Address> addresses) {
+        this.addresses = addresses;
     }
 
     @Override

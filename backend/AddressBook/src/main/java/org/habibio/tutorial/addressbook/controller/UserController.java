@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:5500")
 @RestController
 @RequestMapping("api/v1/users")
 public class UserController {
@@ -36,8 +37,8 @@ public class UserController {
     }
 
     @PutMapping({"/{id}", "/{id}/"})
-    public User updateUser(@PathVariable Long id, @RequestBody User user) {
-        return userService.updateUser(id, user);
+    public User updateUser(@PathVariable Long id, @RequestBody UserRequest userRequest) {
+        return userService.updateUser(id, userRequest);
     }
 
     @DeleteMapping({"/{id}", "/{id}/"})

@@ -43,50 +43,8 @@
                             <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>John Doe</td>
-                            <td>123 Main St</td>
-                            <td><a href="mailto:john.doe@gmail.com">john.doe@gmail.com</a></td>
-                            <td><a href="tel:+1234567">+1234567</a></td>
-                            <td class="flex-sm flex-sm-row justify-sm-between">
-                                <button class="btn btn-warning openUpdateModalBtn w-full mx-2"><i
-                                        class="fas fa-edit"></i>
-                                    Edit</button>
-                                <button class="btn btn-danger openDeleteModalBtn w-full mx-2" data-row-index="0"><i
-                                        class="fas fa-trash"></i>
-                                    Delete</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Jane Smith</td>
-                            <td>456 Elm St</td>
-                            <td><a href="mailto:jane.smith@gmail.com">jane.smith@gmail.com</a></td>
-                            <td><a href="tel:+7654321">+7654321</a></td>
-                            <td>
-                                <button class="btn btn-warning openUpdateModalBtn"><i class="fas fa-edit"></i>
-                                    Edit</button>
-                                <button class="btn btn-danger openDeleteModalBtn" data-row-index="1"><i
-                                        class="fas fa-trash"></i>
-                                    Delete</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>Sam Wilson</td>
-                            <td>789 Oak St</td>
-                            <td><a href="mailto:sam.wilson@gmail.com">sam.wilson@gmail.com</a></td>
-                            <td><a href="tel:+1122334">+1122334</a></td>
-                            <td>
-                                <button class="btn btn-warning openUpdateModalBtn"><i class="fas fa-edit"></i>
-                                    Edit</button>
-                                <button class="btn btn-danger openDeleteModalBtn" data-row-index="2"><i
-                                        class="fas fa-trash"></i>
-                                    Delete</button>
-                            </td>
-                        </tr>
+                    <tbody id="viewAddressesTable">
+
                     </tbody>
                 </table>
             </div>
@@ -125,7 +83,11 @@
                             </div>
                         </div>
                         <div>
-                            <input type="submit" class="btn btn-primary" value="Add new person" />
+                            <input type="submit" class="btn btn-primary" value="Add new person"
+                                id="addNewUserSubmitButton" />
+                        </div>
+                        <div id="addNewUserMesssageBox">
+
                         </div>
                         <div>
                             <p>
@@ -138,10 +100,7 @@
             <div id="userDropdown" class="hidden">
                 <div class="select-container">
                     <label for="existingUsers">Choose a user:</label>
-                    <select id="existingUsers">
-                        <option value="john-doe">John Doe</option>
-                        <option value="jane-smith">Jane Smith</option>
-                        <option value="sam-wilson">Sam Wilson</option>
+                    <select id="existingUsers" class="capitalize">
                     </select>
                 </div>
                 <p>
@@ -149,27 +108,32 @@
                 </p>
             </div>
             <hr />
-            <form>
+            <form id="addNewAddressForm">
                 <label for="addAddress1">Address 1</label>
-                <input type="text" id="addAddress1" name="address1" required>
+                <input type="text" id="addAddress1" name="address1" value="Armlängdsgatan 17" required>
                 <label for="addAddress2">Address 2</label>
-                <input type="text" id="addAddress2" name="address2">
-                <label for="addZipCode">Zip Code</label>
-                <input type="text" id="addZipCode" name="zipCode" required>
+                <input type="text" id="addAddress2" name="address2" value="LGH 1302">
+                <label for="addPostalCode">Postal Code</label>
+                <input type="text" id="addPostalCode" name="postalCode" value="421 72" required>
                 <label for="addCity">City</label>
-                <input type="text" id="addCity" name="city" required>
+                <input type="text" id="addCity" name="city" value="Västra Frölunda" required>
                 <label for="addState">State</label>
-                <input type="text" id="addState" name="state" required>
+                <input type="text" id="addState" name="state" value="Västra Götaland">
                 <label for="addCountry">Country</label>
-                <input type="text" id="addCountry" name="country" required>
+                <input type="text" id="addCountry" name="country" value="sweden" required>
+                <label for="addPhoneNumberAddress">Phone Number</label>
+                <input type="text" id="addPhoneNumberAddress" name="phoneNumber" value="0761296363" required>
                 <label for="addAddressType">Address Type</label>
                 <select id="addAddressType" name="addressType" required>
-                    <option value="home">Home</option>
-                    <option value="work">Work</option>
-                    <option value="school">School</option>
+                    <!-- options will be added here dynamically -->
                 </select>
-                <button type="submit" class="btn btn-primary my-2">Add Address</button>
+                <button type="button" class="btn btn-primary my-2" id="addNewAddressButton">Add Address</button>
             </form>
+
+            <!-- Add New Address Message Box to show error or success messages -->
+            <div id="addNewAddressMessageBox">
+
+            </div>
         </div>
     </div>
 
@@ -215,10 +179,7 @@
             <div id="updateUserDropdown" class="hidden">
                 <div class="select-container">
                     <label for="existingUsersUpdate">Choose a user:</label>
-                    <select id="existingUsersUpdate">
-                        <option value="john-doe">John Doe</option>
-                        <option value="jane-smith">Jane Smith</option>
-                        <option value="sam-wilson">Sam Wilson</option>
+                    <select id="existingUsersUpdate capitalize">
                     </select>
                 </div>
                 <p>
@@ -293,54 +254,13 @@
                             <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>John Doe</td>
-                            <td>123 Main St</td>
-                            <td><a href="mailto:john.doe@gmail.com">John.Doe@gmail.com</a></td>
-                            <td><a href="tel:+1234567">+1234567</a></td>
-                            <td>
-                                <button class="btn btn-warning openUpdateModalBtn"><i class="fas fa-edit"></i>
-                                    Edit</button>
-                                <button class="btn btn-danger openDeleteModalBtn" data-row-index="0"><i
-                                        class="fas fa-trash"></i>
-                                    Delete</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Jane Smith</td>
-                            <td>456 Elm St</td>
-                            <td><a href="mailto:jane.smith@gmail.com">Jane.Smith@gmail.com</a></td>
-                            <td><a href="tel:+7654321">+7654321</a></td>
-                            <td>
-                                <button class="btn btn-warning openUpdateModalBtn"><i class="fas fa-edit"></i>
-                                    Edit</button>
-                                <button class="btn btn-danger openDeleteModalBtn" data-row-index="1"><i
-                                        class="fas fa-trash"></i>
-                                    Delete</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>Sam Wilson</td>
-                            <td>789 Oak St</td>
-                            <td><a href="mailto:sam.wilson@gmail.com">Sam.Wilson@gmail.com</a></td>
-                            <td><a href="tel:+1122334">+1122334</a></td>
-                            <td>
-                                <button class="btn btn-warning openUpdateModalBtn"><i class="fas fa-edit"></i>
-                                    Edit</button>
-                                <button class="btn btn-danger openDeleteModalBtn" data-row-index="2"><i
-                                        class="fas fa-trash"></i>
-                                    Delete</button>
-                            </td>
-                        </tr>
+                    <tbody id="searchResultTBody">
+
                     </tbody>
                 </table>
             </div>
         </div>
-        <script src="./asset/script.js"></script>
+        <script type="module" src="./asset/script.js"></script>
 </body>
 
 </html>

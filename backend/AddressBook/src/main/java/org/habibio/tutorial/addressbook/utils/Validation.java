@@ -38,17 +38,23 @@ public class Validation {
 
     private final String EMAIL_REGEX = "^[a-zA-Z0-9+_.-]+[a-zA-Z0-9_.-]*@[a-zA-Z0-9]+([a-zA-Z0-9-]*[a-zA-Z0-9])?(\\.[a-zA-Z]{2,})+$";
     private final String PHONE_REGEX = "^\\+?[0-9]{1,3}[0-9]{3,14}$";
-    private final String NAME_REGEX = "^[a-zA-Z]+([\\s-'][a-zA-Z]+)*[.]?$";
-    private final String STATE_REGEX = "^[a-zA-Z]+([\\s-'][a-zA-Z]+)*[.]?$";
-    private final String CITY_REGEX = "^[a-zA-Z]+([\\s-'][a-zA-Z]+)*[.]?$";
-    private static final String ADDRESS_REGEX = "^[a-zA-Z0-9\\s,.'-]{3,}$";
+    private final String NAME_REGEX = "^[a-zA-ZåäöÅÄÖ]+([\\s-'][a-zA-ZåäöÅÄÖ]+)*[.]?$";
+
+    private final String STATE_REGEX = "^[a-zA-ZåäöÅÄÖ]+([\\s-'][a-zA-ZåäöÅÄÖ]+)*[.]?$";
+
+    private final String CITY_REGEX = "^[a-zA-ZåäöÅÄÖ]+([\\s-'][a-zA-ZåäöÅÄÖ]+)*[.]?$";
+
+    private static final String ADDRESS_REGEX = "^[a-zA-ZåäöÅÄÖ0-9\\s,.'-]{3,}$";
+
 
     public boolean isEmailValid(String email) {
+
         email = email.trim().toLowerCase();
         return email.matches(EMAIL_REGEX);
     }
 
     public boolean isNameValid(String name) {
+        System.err.printf("Name: %s\n", name);
         return name.matches(NAME_REGEX);
     }
 
@@ -56,19 +62,22 @@ public class Validation {
         country = country.trim().toLowerCase();
         // make first character uppercase
         country = country.substring(0, 1).toUpperCase() + country.substring(1);
-
+        System.err.printf("Country: %s\n", country);
         return COUNTRIES.contains(country);
     }
 
     public boolean isStateValid(String state) {
+        System.err.printf("State: %s\n", state);
         return state.matches(STATE_REGEX);
     }
 
     public boolean isAddressValid(String address) {
+        System.err.printf("Address: %s\n", address);
         return address.matches(ADDRESS_REGEX);
     }
 
     public boolean isCityValid(String city) {
+        System.err.printf("City: %s\n", city);
         return city.matches(CITY_REGEX);
     }
 
@@ -83,6 +92,7 @@ public class Validation {
     }
 
     public boolean isPhoneValid(String phone) {
+        System.err.printf("Phone: %s\n", phone);
         return phone.matches(PHONE_REGEX);
     }
 
@@ -95,6 +105,7 @@ public class Validation {
     }
 
     public boolean isAddressRequestValid(AddressRequest addressRequest) {
+        System.err.println("Validating Address Request");
         return (isAddressValid(addressRequest.getAddressOne()) &&
                 isAddressValid(addressRequest.getAddressTwo()) &&
                 isCityValid(addressRequest.getCity()) &&

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:5500")
 @RestController
 @RequestMapping("api/v1/address-types")
 public class AddressTypeController {
@@ -20,13 +21,15 @@ public class AddressTypeController {
         this.addressTypeService = addressTypeService;
     }
 
+
     @GetMapping({"", "/"})
     public List<AddressType> getAddressTypes() {
+        System.out.println("AddressTypeController.getAddressTypes");
         return addressTypeService.findAll();
     }
 
     @GetMapping({"/{id}", "/{id}/"})
-    public AddressType getAddressTypeById(Long id) {
+    public AddressType getAddressTypeById(@PathVariable Long id) {
         return addressTypeService.findById(id);
     }
 

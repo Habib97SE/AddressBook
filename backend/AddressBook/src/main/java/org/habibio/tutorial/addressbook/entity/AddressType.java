@@ -1,7 +1,11 @@
 package org.habibio.tutorial.addressbook.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.PastOrPresent;
 
 import java.util.Date;
 import java.util.List;
@@ -9,28 +13,29 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "addresstypes")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class AddressType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    @NotBlank(message = "The name cannot be left empty.")
+    @NotEmpty(message = "The name cannot be left empty.")
     private String name;
 
     @Column(nullable = false)
-    @NotBlank(message = "The description cannot be left empty.")
+    @NotEmpty(message = "The description cannot be left empty.")
     private String description;
 
     @Column(nullable = false)
-    @NotBlank(message = "The icon cannot be left empty.")
+    @NotEmpty(message = "The icon cannot be left empty.")
     private String icon;
 
     @OneToMany(mappedBy = "addressType", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Address> addresses;
 
     @Column(nullable = false)
-    @NotBlank(message = "The createdAt cannot be left empty.")
+    @PastOrPresent(message = "The createdAt date must be in the past or present.")
     private Date createdAt;
 
     @Column(nullable = true)
@@ -87,11 +92,11 @@ public class AddressType {
         this.icon = icon;
     }
 
-    public @NotBlank(message = "The createdAt cannot be left empty.") Date getCreatedAt() {
+    public @PastOrPresent(message = "The createdAt cannot be in future.") Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(@NotBlank(message = "The createdAt cannot be left empty.") Date createdAt) {
+    public void setCreatedAt(@PastOrPresent(message = "The createdAt cannot be in future.") Date createdAt) {
         this.createdAt = createdAt;
     }
 
