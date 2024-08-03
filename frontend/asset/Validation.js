@@ -103,7 +103,6 @@ export class Validation {
      * @param {object} address : Address object to be validated, the following properties are rquired to be checked: addressOne, addressTwo, postalCode, city, state, country, userId, addressTypeId, phoneNumber
      */
     validateAddressData(address) {
-        console.log(address);
         if (!this.validateAddress(address.addressOne)) {
             console.log("Invalid address one");
             console.log(address.addressOne);

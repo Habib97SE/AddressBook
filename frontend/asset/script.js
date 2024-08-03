@@ -2,13 +2,23 @@
 
 import { API } from "./API_Requests.js";
 import { Validation } from "./Validation.js";
+import * as handlers from "./domHandlers.js";
 
 const api = new API("http://localhost:8090/api/v1");
 const validation = new Validation();
 
 document.addEventListener("DOMContentLoaded", async () => {
-    // Table body element
     const tableBody = document.getElementById("viewAddressesTable");
+
+    // The Sort By Dropdown Element for the Table
+    const sortAddressByCreatedDate = document.getElementById(
+        "sortAddressByCreatedDate"
+    );
+
+    // The Filter By Dropdown Element for the Table
+    const filterByAddressTypes = document.getElementById(
+        "filterByAddressTypes"
+    );
 
     const openAddModalBtn = document.getElementById("openAddModalBtn");
     const closeAddModalBtn = document.getElementById("closeAddModalBtn");
@@ -16,11 +26,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const addNewUserSubmitButton = document.getElementById(
         "addNewUserSubmitButton"
     );
-    /** Add New address IDs */
     const addNewAddressButton = document.getElementById("addNewAddressButton");
-    const addNewAddressMessageBox = document.getElementById(
-        "addNewAddressMessageBox"
-    );
 
     const openUpdateModalBtns = document.querySelectorAll(
         ".openUpdateModalBtn"
@@ -57,354 +63,208 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     let searchQuery;
     let rowToDelete;
-    let users;
-    let addresses;
+    let users = await handlers.fetchUsers(api);
+    let addresses = await handlers.fetchAddresses(api);
 
-    // Fetch users from the API
-    const fetchUsers = async () => {
-        try {
-            users = await api.getUsers();
-        } catch (error) {
-            console.error("Error fetching users:", error);
-        }
-    };
-    await fetchUsers();
+    // Populate the address table with all addresses
+    handlers.renderTable(addresses);
 
-    // Fetch addresses from the API
-    const fetchAddresses = async () => {
-        try {
-            addresses = await api.getAddresses();
-        } catch (error) {
-            console.error("Error fetching addresses:", error);
-        }
-    };
-    await fetchAddresses();
-
-    // Loop through the addresses and display them in the table
-    addresses.forEach((address) => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-            <td>${address.id}</td>
-            <td>${address.fullName}</td>
-            <td>${address.address}</td>
-            <td>${address.email}</td>
-            <td>${address.phoneNumber}</td>
-            <td>
-                <button class="openUpdateModalBtn btn btn-warning m-1">Update</button>
-                <button class="openDeleteModalBtn btn btn-danger m-1">Delete</button>
-            </td>
-        `;
-        tableBody.appendChild(row);
-    });
-    // if addresses is empty, display a message
-    if (addresses.length === 0) {
-        const row = document.createElement("tr");
-        row.innerHTML = "<td colspan='6'>No addresses found</td>";
-        tableBody.appendChild(row);
-    }
-
-    // Event listener for addNewAddressButton
-    addNewAddressButton.addEventListener("click", (e) => {
-        e.preventDefault(); // Prevent the form from submitting the default way
-        const addAddressOneInput = document.getElementById("addAddress1");
-        const addAddressTwoInput = document.getElementById("addAddress2");
-        const addPostalCodeInput = document.getElementById("addPostalCode");
-        const addCityInput = document.getElementById("addCity");
-        const addStateInput = document.getElementById("addState");
-        const addCountryInput = document.getElementById("addCountry");
-        const addPhoneNumberInput = document.getElementById(
-            "addPhoneNumberAddress"
-        );
-        const addAddressTypeInput = document.getElementById("addAddressType");
-        const userId = document.getElementById("existingUsers").value;
-
-        console.log(addPhoneNumberInput.value); // Ensure this logs correctly
-
-        const address = {
-            addressOne: addAddressOneInput.value,
-            addressTwo: addAddressTwoInput.value,
-            postalCode: addPostalCodeInput.value,
-            city: addCityInput.value,
-            state: addStateInput.value,
-            country: addCountryInput.value,
-            phoneNumber: addPhoneNumberInput.value,
-            addressTypeId: parseInt(addAddressTypeInput.value),
-            userId: parseInt(userId),
-        };
-
-        // validate address input
-        if (validation.validateAddressData(address)) {
-            console.log("Address is valid");
-            // add new address
-            api.addNewAddress(address).then((data) => {
-                // check if address was added successfully
-                console.log("Address from if statement in script.js:");
-                console.log(data);
-                if (data) {
-                    validation.showMessage(
-                        "addNewAddressMessageBox",
-                        "Address added successfully",
-                        ["alert", "alert-success"]
-                    );
-                } else {
-                    validation.showMessage(
-                        "addNewAddressMessageBox",
-                        "Failed to add address",
-                        ["alert", "alert-danger"]
-                    );
-                }
-
-                // clear form fields
-                addAddressOneInput.value = "";
-                addAddressTwoInput.value = "";
-                addPostalCodeInput.value = "";
-                addCityInput.value = "";
-                addStateInput.value = "";
-                addCountryInput.value = "";
-                addPhoneNumberInput.value = "";
-                addAddressTypeInput.value = "";
-            });
-        } else {
-            console.log("Address is invalid");
-            validation.showMessage(
-                "addNewAddressMessageBox",
-                "Invalid address input",
-                ["alert", "alert-danger"]
+    // Sort the table by created date in ascending/descending order
+    sortAddressByCreatedDate.addEventListener("change", () => {
+        const sortOrder = sortAddressByCreatedDate.value;
+        if (sortOrder === "oldToNew") {
+            addresses.sort(
+                (a, b) => new Date(a.createdDate) - new Date(b.createdDate)
             );
+            handlers.renderTable(addresses);
+            return;
         }
-    }); // End of addNewAddressButton event listener
-
-    // Function to update user dropdown
-    const updateUserDropdownList = async () => {
-        const existingUsers = document.getElementById("existingUsers");
-        existingUsers.innerHTML = ""; // Clear existing options
-        await fetchUsers();
-        users.forEach((user) => {
-            const option = document.createElement("option");
-            option.value = user.id;
-            option.textContent = user.firstName + " " + user.lastName;
-            option.classList.add("capitalize");
-            existingUsers.appendChild(option);
-        });
-    };
-
-    showDropdown.addEventListener("click", (e) => {
-        e.preventDefault();
-        userForm.classList.add("fade");
-        setTimeout(() => {
-            userForm.classList.add("hidden");
-            userDropdown.classList.remove("hidden");
-            userDropdown.classList.add("fade");
-            setTimeout(() => {
-                userDropdown.classList.remove("fade");
-                userDropdown.classList.add("show");
-            }, 50);
-        }, 500);
-    });
-
-    showForm.addEventListener("click", (e) => {
-        e.preventDefault();
-        userDropdown.classList.add("fade");
-        setTimeout(() => {
-            userDropdown.classList.add("hidden");
-            userForm.classList.remove("hidden");
-            userForm.classList.add("fade");
-            setTimeout(() => {
-                userForm.classList.remove("fade");
-                userForm.classList.add("show");
-            }, 50);
-        }, 500);
-    });
-
-    showUpdateDropdown.addEventListener("click", (e) => {
-        e.preventDefault();
-        updateUserForm.classList.add("fade");
-        setTimeout(() => {
-            updateUserForm.classList.add("hidden");
-            updateUserDropdown.classList.remove("hidden");
-            updateUserDropdown.classList.add("fade");
-            setTimeout(() => {
-                updateUserDropdown.classList.remove("fade");
-                updateUserDropdown.classList.add("show");
-            }, 50);
-        }, 500);
-    });
-
-    showUpdateForm.addEventListener("click", (e) => {
-        e.preventDefault();
-        updateUserDropdown.classList.add("fade");
-        setTimeout(() => {
-            updateUserDropdown.classList.add("hidden");
-            updateUserForm.classList.remove("hidden");
-            updateUserForm.classList.add("fade");
-            setTimeout(() => {
-                updateUserForm.classList.remove("fade");
-                updateUserForm.classList.add("show");
-            }, 50);
-        }, 500);
-    });
-
-    /**
-     * DOM manipulation for modals Add New Address
-     */
-    openAddModalBtn.addEventListener("click", async () => {
-        addAddressModal.style.display = "block";
-        await updateUserDropdownList();
-
-        /* Populate the address types with retrieved data from addresstypes table */
-        const addAddressTypes = document.querySelector("#addAddressType");
-        addAddressTypes.innerHTML = ""; // Clear existing options
-        api.getAddressTypes().then((data) => {
-            data.forEach((addressType) => {
-                const option = document.createElement("option");
-                option.value = addressType.id;
-                option.textContent = addressType.name;
-                option.classList.add("capitalize");
-                addAddressTypes.appendChild(option);
-            });
-        });
-    });
-
-    addNewUserSubmitButton.addEventListener("click", (e) => {
-        e.preventDefault();
-        const firstNameInput = document.getElementById("addFirstName");
-        const lastNameInput = document.getElementById("addLastName");
-        const emailInput = document.getElementById("addEmail");
-        const phoneInput = document.getElementById("addPhoneNumber");
-
-        const user = {
-            firstName: firstNameInput.value,
-            lastName: lastNameInput.value,
-            email: emailInput.value,
-            mobilePhone: phoneInput.value,
-        };
-
-        // validate user input
-        if (validation.validateUser(user)) {
-            // add new user
-            api.addNewUser(user).then((data) => {
-                // check if user was added successfully
-                if (data) {
-                    validation.showMessage(
-                        "addNewUserMesssageBox",
-                        "User added successfully",
-                        ["alert", "alert-success"]
-                    );
-                }
-
-                users.push(data);
-
-                // clear form fields
-                firstNameInput.value = "";
-                lastNameInput.value = "";
-                emailInput.value = "";
-                phoneInput.value = "";
-
-                // Update the dropdown with the new user
-                updateUserDropdownList();
-            });
+        if (sortOrder === "newToOld") {
+            addresses.sort(
+                (a, b) => new Date(b.createdDate) - new Date(a.createdDate)
+            );
+            handlers.renderTable(addresses);
+            return;
         }
+        if (sortOrder === "default") {
+            handlers.renderTable(addresses);
+            return;
+        }
+        // if sortOrder is alphabetical order (A-Z)
+        if (sortOrder === "aToZ") {
+            addresses.sort((a, b) => a.address.localeCompare(b.address));
+            handlers.renderTable(addresses);
+            return;
+        }
+        // if sortOrder is reverse alphabetical order (Z-A)
+        if (sortOrder === "zToA") {
+            addresses.sort((a, b) => b.address.localeCompare(a.address));
+            handlers.renderTable(addresses);
+            return;
+        }
+        x``;
     });
 
-    closeAddModalBtn.addEventListener("click", () => {
-        addAddressModal.style.display = "none";
+    // Populate the address types dropdown
+    filterByAddressTypes.innerHTML = handlers.populateAddressTypes(
+        api,
+        "#filterByAddressTypes"
+    );
+
+    // Filter by users
+    const filterByUsers = document.getElementById("filterByUsers");
+    handlers.populateUsersDropDown(api, users, "#filterByUsers");
+    filterByUsers.addEventListener("change", () => {
+        if (filterByUsers.value === "all") {
+            handlers.renderTable(addresses);
+            return;
+        }
+
+        let chosenUser = users.find(
+            (user) => user.id === parseInt(filterByUsers.value)
+        );
+        let filteredAddresses = addresses.filter(
+            (address) =>
+                address.fullName ===
+                chosenUser.firstName + " " + chosenUser.lastName
+        );
+
+        handlers.renderTable(filteredAddresses);
     });
 
-    openUpdateModalBtns.forEach((btn) => {
-        btn.addEventListener("click", (event) => {
-            const row = event.target.closest("tr");
-            updateAddressModal.style.display = "block";
-            // Populate update modal with row data if needed
-        });
+    // Filter the table by address type
+    filterByAddressTypes.addEventListener("change", () => {
+        // check if all addresses should be displayed
+        if (filterByAddressTypes.value === "all") {
+            handlers.renderTable(addresses); // Re-render the table with all data
+            return;
+        }
+        const filteredAddresses = addresses.filter(
+            (address) => address.addressType === filterByAddressTypes.value
+        );
+        handlers.renderTable(filteredAddresses); // Re-render the table with filtered data
     });
 
-    closeUpdateModalBtn.addEventListener("click", () => {
-        updateAddressModal.style.display = "none";
-    });
+    openAddModalBtn.addEventListener("click", () =>
+        handlers.openAddModal(
+            addAddressModal,
+            () => handlers.populateUsersDropDown(api, users, "#existingUsers"),
+            () => handlers.populateAddressTypes(api, "#addAddressType")
+        )
+    );
+    closeAddModalBtn.addEventListener("click", () =>
+        handlers.closeAddModal(addAddressModal)
+    );
+    addNewUserSubmitButton.addEventListener("click", (e) =>
+        handlers.handleAddNewUser(
+            e,
+            validation,
+            api,
+            () => handlers.updateUserDropdownList(api, users),
+            users
+        )
+    );
+    addNewAddressButton.addEventListener("click", (e) =>
+        handlers.handleAddNewAddress(
+            e,
+            validation,
+            api,
+            addresses,
+            () => handlers.populateAddressTable(addresses, tableBody),
+            handlers.clearAddressForm
+        )
+    );
+
+    closeUpdateModalBtn.addEventListener("click", () =>
+        handlers.closeUpdateModal(updateAddressModal)
+    );
 
     openDeleteModalBtns.forEach((btn) => {
         btn.addEventListener("click", (event) => {
-            rowToDelete = event.target.closest("tr");
-            deleteConfirmModal.style.display = "block";
+            rowToDelete = handlers.openDeleteModal(event, deleteConfirmModal);
         });
     });
+    closeDeleteModalBtn.addEventListener("click", () =>
+        handlers.closeDeleteModal(deleteConfirmModal)
+    );
 
-    closeDeleteModalBtn.addEventListener("click", () => {
-        deleteConfirmModal.style.display = "none";
-    });
+    cancelDeleteBtn.addEventListener("click", () =>
+        handlers.cancelDelete(deleteConfirmModal)
+    );
 
-    confirmDeleteBtn.addEventListener("click", () => {
-        // delete address
-        if (rowToDelete) {
-            rowToDelete.remove();
-            rowToDelete = null;
-            deleteConfirmModal.style.display = "none";
+    confirmDeleteBtn.addEventListener("click", () =>
+        handlers.confirmDelete(
+            rowToDelete,
+            deleteConfirmModal,
+            api,
+            addresses,
+            handlers.renderTable
+        )
+    );
+
+    searchResultsModalBtn.addEventListener("click", () =>
+        handlers.openSearchResultsModal(
+            searchQueryInput,
+            searchQuery,
+            searchResultsModal,
+            addresses,
+            handlers.populateSearchResultsTable
+        )
+    );
+    closeSearchResultsModalBtn.addEventListener("click", () =>
+        handlers.closeSearchResultsModal(searchResultsModal)
+    );
+
+    showDropdown.addEventListener("click", handlers.toggleUserDropdown);
+    showForm.addEventListener("click", handlers.toggleUserForm);
+    showUpdateDropdown.addEventListener("click", handlers.toggleUpdateDropdown);
+    showUpdateForm.addEventListener("click", handlers.toggleUpdateForm);
+
+    window.addEventListener("click", (event) =>
+        handlers.handleWindowClick(event, [
+            addAddressModal,
+            updateAddressModal,
+            deleteConfirmModal,
+            searchResultsModal,
+        ])
+    );
+    window.addEventListener("keydown", handlers.handleKeyDown);
+
+    tableBody.addEventListener("click", (event) => {
+        if (event.target.classList.contains("openDeleteModalBtn")) {
+            rowToDelete = handlers.openDeleteModal(event, deleteConfirmModal);
+        }
+        if (event.target.classList.contains("openUpdateModalBtn")) {
+            handlers.openUpdateModal(event, updateAddressModal, api, users);
         }
     });
 
-    cancelDeleteBtn.addEventListener("click", () => {
-        deleteConfirmModal.style.display = "none";
-    });
+    // handle the update address form submission
+    document
+        .getElementById("updateAddressSubmissionButton")
+        .addEventListener("click", (e) => {
+            e.preventDefault();
+            const addressId = document.getElementById("updateAddressId").value;
 
-    searchResultsModalBtn.addEventListener("click", () => {
-        searchQuery = searchQueryInput.value;
-        console.log(searchQuery);
-        const showSearchQuery = document.getElementById("showSearchQuery");
-        showSearchQuery.textContent = searchQuery;
-        searchResultsModal.style.display = "block";
-
-        // populate the table in the search result modal
-        const searchResultTBody = document.getElementById("searchResultTBody");
-        const searchResults = addresses.filter((address) => {
-            return (
-                address.fullName.includes(searchQuery) ||
-                address.address.includes(searchQuery) ||
-                address.email.includes(searchQuery) ||
-                address.phoneNumber.includes(searchQuery)
+            const address = {
+                id: addressId,
+                addressOne: document.getElementById("updateAddress1").value,
+                addressTwo: document.getElementById("updateAddress2").value,
+                city: document.getElementById("updateCity").value,
+                state: document.getElementById("updateState").value,
+                postalCode: document.getElementById("updatePostalCode").value,
+                country: document.getElementById("updateCountry").value,
+                phoneNumber: document.getElementById("updatePhoneNumberAddress")
+                    .value,
+                addressType: document.getElementById("updateAddressType").value,
+                userId: document.getElementById("existingUsersUpdate").value,
+            };
+            console.log(address);
+            handlers.handleUpdateFormSubmission(
+                addressId,
+                address,
+                api,
+                validation
             );
-        });
-
-        searchResultTBody.innerHTML = "";
-
-        searchResults.forEach((address) => {
-            const row = document.createElement("tr");
-            row.innerHTML = `
-            <td>${address.id}</td>
-            <td>${address.fullName}</td>
-            <td>${address.address}</td>
-            <td>${address.email}</td>
-            <td>${address.phoneNumber}</td>
-            <td>
-                <button class="openUpdateModalBtn btn btn-warning m-1">Update</button>
-                <button class="openDeleteModalBtn btn btn-danger m-1">Delete</button>
-            </td>
-        `;
-            searchResultTBody.appendChild(row);
-        });
-    });
-
-    closeSearchResultsModalBtn.addEventListener("click", () => {
-        searchResultsModal.style.display = "none";
-    });
-
-    window.addEventListener("click", (event) => {
-        // close modals when clicked outside or on close button or ESC key
-        if (event.target == addAddressModal) {
-            addAddressModal.style.display = "none";
-        } else if (event.target == updateAddressModal) {
-            updateAddressModal.style.display = "none";
-        } else if (event.target == deleteConfirmModal) {
-            deleteConfirmModal.style.display = "none";
-        } else if (event.target == searchResultsModal) {
-            searchResultsModal.style.display = "none";
-        }
-    });
-
-    window.addEventListener("keydown", (event) => {
-        if (event.key === "Escape") {
-            document.querySelectorAll(".modal").forEach((modal) => {
-                modal.style.display = "none";
-            });
-        }
-    });
+        }); // end of update address form submission
 });

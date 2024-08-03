@@ -1,5 +1,6 @@
 package org.habibio.tutorial.addressbook.DTO;
 
+import java.util.Date;
 import java.util.Objects;
 
 public class AddressResponse {
@@ -9,16 +10,20 @@ public class AddressResponse {
     private String email;
     private String phoneNumber;
     private String fullName;
+    private String addressType;
+    private Date createdDate;
 
     public AddressResponse() {
     }
 
-    public AddressResponse(Long id, String address, String email, String phoneNumber, String fullName) {
+    public AddressResponse(Long id, String address, String email, String phoneNumber, String fullName, String addressType, Date createdDate) {
         this.id = id;
         this.address = address;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.fullName = fullName;
+        this.addressType = addressType;
+        this.createdDate = createdDate;
     }
 
     public Long getId() {
@@ -61,17 +66,33 @@ public class AddressResponse {
         this.fullName = fullName;
     }
 
+    public String getAddressType() {
+        return addressType;
+    }
+
+    public void setAddressType(String addressType) {
+        this.addressType = addressType;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AddressResponse that = (AddressResponse) o;
-        return Objects.equals(id, that.id) && Objects.equals(address, that.address) && Objects.equals(email, that.email) && Objects.equals(phoneNumber, that.phoneNumber) && Objects.equals(fullName, that.fullName);
+        return Objects.equals(id, that.id) && Objects.equals(address, that.address) && Objects.equals(email, that.email) && Objects.equals(phoneNumber, that.phoneNumber) && Objects.equals(fullName, that.fullName) && Objects.equals(addressType, that.addressType) && Objects.equals(createdDate, that.createdDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, address, email, phoneNumber, fullName);
+        return Objects.hash(id, address, email, phoneNumber, fullName, addressType, createdDate);
     }
 
     @Override
@@ -82,6 +103,8 @@ public class AddressResponse {
                 ", email='" + email + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", fullName='" + fullName + '\'' +
+                ", addressType='" + addressType + '\'' +
+                ", createdDate=" + createdDate +
                 '}';
     }
 }

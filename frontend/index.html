@@ -32,7 +32,33 @@
                     New</button>
             </p>
             <div class="table-responsive">
-                <table class="roboto-medium flex-sm flex-sm-col justify-sm-center">
+                <div class="flex flex-row">
+                    <!-- Filter and Sorting dropdowns -->
+                    <div class="flex flex-col m-1">
+                        <label for="filterByAddressTypes">Filter by Address Type</label>
+                        <select id="filterByAddressTypes" class="capitalize">
+
+                        </select>
+                    </div>
+                    <!-- Sort based on created date -->
+                    <div class="flex flex-col m-1 capitalize">
+                        <label for="sortAddressByCreatedDate">Sort by</label>
+                        <select id="sortAddressByCreatedDate" class="capitalize">
+                            <option value="oldToNew">From oldest to newst</option>
+                            <option value="newToOld">From newest to oldest</option>
+                            <option value="aToZ">Address: A-Z</option>
+                            <option value="zToA">Address: Z-A</option>
+                        </select>
+                    </div>
+                    <!-- Filter by users -->
+                    <div class="flex flex-col m-1">
+                        <label for="filterByUsers">Filter by user</label>
+                        <select id="filterByUsers" class="capitalize">
+                            <option value="all">All</option>
+                        </select>
+                    </div>
+                </div>
+                <table class="roboto-medium flex-sm flex-sm-col justify-sm-center capitalize">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -40,6 +66,7 @@
                             <th>Address</th>
                             <th>Email</th>
                             <th>Phone</th>
+                            <th>Address Type</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -49,6 +76,7 @@
                 </table>
             </div>
         </div>
+
     </main>
     <footer>
         <p>All rights reserved &copy; 2024</p>
@@ -179,7 +207,7 @@
             <div id="updateUserDropdown" class="hidden">
                 <div class="select-container">
                     <label for="existingUsersUpdate">Choose a user:</label>
-                    <select id="existingUsersUpdate capitalize">
+                    <select id="existingUsersUpdate">
                     </select>
                 </div>
                 <p>
@@ -187,39 +215,30 @@
                 </p>
             </div>
             <hr />
-            <form>
+            <form id="updateAddressForm">
+                <input type="hidden" id="updateAddressId" name="addressId" />
                 <label for="updateAddress1">Address 1</label>
                 <input type="text" id="updateAddress1" name="address1" required>
                 <label for="updateAddress2">Address 2</label>
                 <input type="text" id="updateAddress2" name="address2">
-                <label for="updateZipCode">Zip Code</label>
-                <input type="text" id="updateZipCode" name="zipCode" required>
+                <label for="updatePostalCode">Postal Code</label>
+                <input type="text" id="updatePostalCode" name="postalCode" required>
                 <label for="updateCity">City</label>
                 <input type="text" id="updateCity" name="city" required>
                 <label for="updateState">State</label>
                 <input type="text" id="updateState" name="state" required>
                 <label for="updateCountry">Country</label>
                 <input type="text" id="updateCountry" name="country" required>
+                <label for="updatePhoneNumberAddress">Phone Number</label>
+                <input type="text" id="updatePhoneNumberAddress" name="phoneNumber" required>
                 <label for="updateAddressType">Address Type</label>
                 <select id="updateAddressType" name="addressType" required>
-                    <option value="home">Home</option>
-                    <option value="work">Work</option>
-                    <option value="school">School</option>
+
                 </select>
-                <button type="submit" class="btn btn-primary">Update Address</button>
+                <input type="submit" class="btn btn-primary " id="updateAddressSubmissionButton"
+                    value="Update Address" />
             </form>
-            <div class="alert alert-success">
-                <i class="fas fa-check-circle d-inline"></i>
-                <p class="d-inline">Address updated successfully</p>
-            </div>
-            <div class="alert alert-danger text-center">
-                <p>Failed to update address</p>
-            </div>
-            <div class="alert alert-warning text-center">
-                <p>Address not found</p>
-            </div>
-            <div class="alert alert-info text-center">
-                <p>Address updated successfully</p>
+            <div id="updateAddressMessageBox">
             </div>
         </div>
     </div>

@@ -65,9 +65,28 @@ export class API {
      */
     async getAddresses() {
         try {
-            console.log("Fetching addresses from the server...");
-            console.log("Base URL:", this.baseURL);
             const response = await fetch(`${this.baseUrl}/addresses`);
+            if (!response.ok) {
+                throw new Error(
+                    `Network response was not ok: ${response.statusText}`
+                );
+            }
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error(
+                "There has been a problem with your fetch operation:",
+                error
+            );
+        }
+    }
+
+    async getAddressById(addressId) {
+        console.log("addressId", addressId);
+        try {
+            const response = await fetch(
+                `${this.baseUrl}/addresses/${addressId}`
+            );
             if (!response.ok) {
                 throw new Error(
                     `Network response was not ok: ${response.statusText}`
@@ -175,14 +194,28 @@ export class API {
      * @returns {object} : deleted address object
      */
     async deleteAddress(addressId) {
-        const endpoint = `${this.baseUrl}/addresses/${addressId}`;
-        await fetch(endpoint, {
-            method: "DELETE",
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                return data;
-            });
+        try {
+            const response = await fetch(
+                `${this.baseUrl}/addresses/${addressId}`,
+                {
+                    method: "DELETE",
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error(
+                    `Network response was not ok: ${response.statusText}`
+                );
+            }
+
+            return true; // Indicate that the deletion was successful
+        } catch (error) {
+            console.error(
+                "There has been a problem with your fetch operation:",
+                error
+            );
+            return false; // Indicate that the deletion failed
+        }
     }
 
     /**

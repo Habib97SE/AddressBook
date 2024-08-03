@@ -44,6 +44,8 @@ public class AddressService {
             addressResponse.setEmail(address.getUser().getEmail());
             addressResponse.setPhoneNumber(address.getPhoneNumber());
             addressResponse.setFullName(address.getUser().getFirstName() + " " + address.getUser().getLastName());
+            addressResponse.setAddressType(address.getAddressType().getName());
+            addressResponse.setCreatedDate(address.getCreatedAt());
             addressResponses.add(addressResponse);
         }
         return addressResponses;
@@ -59,6 +61,8 @@ public class AddressService {
             addressResponse.setEmail(address.getUser().getEmail());
             addressResponse.setPhoneNumber(address.getPhoneNumber());
             addressResponse.setFullName(address.getUser().getFirstName() + " " + address.getUser().getLastName());
+            addressResponse.setAddressType(address.getAddressType().getName());
+            addressResponse.setCreatedDate(address.getCreatedAt());
             addressResponses.add(addressResponse);
         }
         return addressResponses;
