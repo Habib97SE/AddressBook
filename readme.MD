@@ -52,3 +52,53 @@ An interactive and user-friendly Address Book Management web application that al
 
 -   GET **/api/v1/users**: Retrieve all users.
 -   POST **/api/v1/users**: Add a new user.
+
+## Installation
+
+-   Prerequisites:
+
+    1. Java 11+
+    2. Maven
+    3. MySQL
+
+-   Backend Setup
+    1. Clone the repository:
+    ```bash
+    git clone https://github.com/Habib97SE/AddressBook.git
+    ```
+    2. Configure the **application.properties**
+    ```properties
+    spring.datasource.url=jdbc:mysql://localhost:3306/addressbook_db
+    spring.datasource.username=your-username
+    spring.datasource.password=your-password
+    ```
+    3. Build and run the application:
+    ```bash
+    mvn clean install
+    mvn spring-boot:run
+    ```
+-   Frontend setup
+    1. Open the index.html file located in the frontend/ folder in a browser.
+    2. Ensure the backend is running to handle API requests.
+
+**If your backend server runs on a port other than 8080, then you have to change the default address to that port number. The default address is: http://localhost:8080**
+
+### Usage
+
+-   Launch the application and view the homepage where you can search and filter addresses.
+-   Use the Add New button to open the modal and add a new address. The form is validated before submission.
+-   Manage users and assign them addresses from the dropdown.
+-   Click Update or Delete buttons to edit or remove addresses.
+
+### Validations
+
+-   **Unique Email Validation**: Ensures no two users can register with the same email address.
+-   **Form Validations**: All forms are validated before submission (e.g., required fields, valid email format).
+
+## Future Improvements
+
+### Add pagination to handle large datasets.
+
+### Implement user authentication for added security.
+
+### Improve the UI/UX by adding more styles and enhancing mobile responsiveness.
